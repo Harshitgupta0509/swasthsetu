@@ -4,7 +4,7 @@ const path = require('path');
 
 const repositoryRoot = path.resolve(__dirname, '..');
 const webRoot = path.join(repositoryRoot, 'apps', 'web');
-const port = Number(process.env.FRONTEND_PORT || 4173);
+const port = Number(process.env.FRONTEND_PORT || process.env.PORT || 4173);
 const types = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -48,6 +48,11 @@ function resolveRequest(pathname) {
 
 http.createServer((request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
+  if (pathname === '/runtime-config.js') {
+    const apiUrl = process.env.SWASTHSETU_API_URL || 'http://127.0.0.1:3000/api/v1';
+    response.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-store' });
+    return response.end(`window.SWASTHSETU_API_URL = ${JSON.stringify(apiUrl)};`);
+  }
   const filePath = resolveRequest(pathname);
   if (!filePath) {
     response.writeHead(404);
@@ -64,4 +69,4 @@ http.createServer((request, response) => {
     });
     response.end(data);
   });
-}).listen(port, '127.0.0.1', () => console.log(`SwasthSetu frontend running at http://127.0.0.1:${port}`));
+}).listen(port, process.env.HOST || '0.0.0.0', () => console.log(`SwasthSetu frontend running on port ${port}`));
