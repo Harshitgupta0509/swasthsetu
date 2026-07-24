@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  SUPER_ADMIN
+  HOSPITAL_ADMIN
+  RECEPTION
+  LAB_STAFF
+  BLOOD_BANK_STAFF
+  BED_MANAGER
+  ACCOUNTS
+  VIEWER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AppointmentStatus {
+  CONFIRMED
+  WAITING
+  IN_CONSULTATION
+  COMPLETED
+  CANCELLED
+}
+
+enum AppointmentPriority {
+  NORMAL
+  HIGH
+  EMERGENCY
+}
+
+model User {
+  id                String        @id @default(uuid())
+  hospitalId        String?
+  role              Role
+  mobileNumber      String?       @unique
+  employeeId        String?       @unique
+  doctorId          String?       @unique
+  passwordHash      String?
+  refreshTokenHash  String?
+  temporaryPassword Boolean       @default(false)
+  fullName          String
+  dateOfBirth       DateTime?
+  gender            Gender?
+  address           String?
+  bloodGroup        String?
+  emergencyContact  String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  patientAppointments Appointment[] @relation("PatientAppointments")
+  doctorAppointments  Appointment[] @relation("DoctorAppointments")
+  notifications       Notification[]
+  labReports          LabReport[]
+
+  @@index([hospitalId, role])
+}
+
+model Appointment {
+  id                  String              @id @default(uuid())
+  hospitalId          String
+  patientId           String
+  doctorId            String
+  tokenNumber         Int
+  department          String
+  scheduledAt         DateTime
+  status              AppointmentStatus   @default(CONFIRMED)
+  priority            AppointmentPriority @default(NORMAL)
+  chiefComplaint      String
+  consultationStartedAt DateTime?
+  consultationEndedAt   DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  patient             User                @relation("PatientAppointments", fields: [patientId], references: [id])
+  doctor              User                @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  notifications       Notification[]
+
+  @@unique([hospitalId, scheduledAt, tokenNumber])
+  @@index([patientId, scheduledAt])
+  @@index([doctorId, scheduledAt, status])
+}
+
+model Notification {
+  id            String       @id @default(uuid())
+  userId        String
+  appointmentId String?
+  type          String
+  title         String
+  message       String
+  channel       String       @default("IN_APP")
+  readAt        DateTime?
+  createdAt     DateTime     @default(now())
+  user          User         @relation(fields: [userId], references: [id])
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+
+  @@index([userId, createdAt])
+}
+enum LabReportStatus {
+  PENDING
+  PROCESSING
+  READY
+  REVIEWED
+}
+
+enum BedStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+model LabReport {
+  id          String          @id @default(uuid())
+  hospitalId  String
+  patientId   String
+  testName    String
+  requestedBy String
+  status      LabReportStatus @default(PENDING)
+  uploadDate  DateTime?
+  remarks     String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  patient     User            @relation(fields: [patientId], references: [id])
+
+  @@index([hospitalId, status])
+  @@index([patientId, createdAt])
+}
+
+model BloodStock {
+  id                String   @id @default(uuid())
+  hospitalId        String
+  bloodGroup        String
+  units             Int
+  criticalThreshold Int
+  updatedBy         String
+  updatedAt         DateTime @updatedAt
+
+  @@unique([hospitalId, bloodGroup])
+}
+
+model Bed {
+  id             String    @id @default(uuid())
+  hospitalId     String
+  bedNumber      String
+  ward           String
+  department     String
+  patientName    String?
+  assignedDoctor String?
+  status         BedStatus @default(AVAILABLE)
+  admissionDate  DateTime?
+  remarks        String?
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([hospitalId, bedNumber])
+  @@index([hospitalId, status])
+}

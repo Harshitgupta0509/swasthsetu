@@ -1,0 +1,20 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+dist/
+.pnpm-store/
+
+# Local runtime data
+*.db
+*.db-shm
+*.db-wal
+
+# Local tooling and editor files
+.kapso/
+.agents/
+.vscode/
+*.log
