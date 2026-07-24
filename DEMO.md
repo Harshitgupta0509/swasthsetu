@@ -11,7 +11,7 @@ pnpm build
 pnpm start
 ```
 
-Open `C:\Users\harsh\Desktop\hackathon project\index.html` in a browser.
+In a second terminal from the repository root, run `npm run frontend`, then open `http://127.0.0.1:4173` in a browser.
 
 ## Demo accounts
 
