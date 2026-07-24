@@ -1,0 +1,11 @@
+{
+  "name": "swasthsetu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SwasthSetu Government Hospital Management Platform workspace",
+  "scripts": {
+    "frontend": "node scripts/serve-frontend.cjs",
+    "backend": "pnpm --dir apps/backend start:dev",
+    "typecheck": "node apps/backend/node_modules/typescript/bin/tsc --project apps/backend/tsconfig.json --noEmit"
+  }
+}
