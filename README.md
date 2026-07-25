@@ -4,6 +4,12 @@
 
 SwasthSetu is a hackathon-ready Government Hospital Management Platform. It brings appointment booking, OPD queues, clinical consultations, prescriptions, laboratory reports, bed and blood availability, and hospital operations into a single modular application.
 
+## Live demo
+
+**Frontend:** [https://swasthsetu-web.onrender.com](https://swasthsetu-web.onrender.com)
+
+SwasthSetu is hosted on **Render**, with its frontend, NestJS API, PostgreSQL database, and Redis-compatible Key Value service deployed as separate services.
+
 ## Why SwasthSetu
 
 Government hospital care often involves long queues, fragmented records, and limited visibility into real-time availability. SwasthSetu provides a simple digital layer around that journey:
@@ -149,6 +155,7 @@ Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
 - **Caching:** Redis
 - **Authentication:** JWT, role-based access control, OTP-ready patient flow
 - **Notifications:** Kapso WhatsApp integration is prepared as an optional next step
+- **Hosting:** Render
 
 ## Documentation
 
@@ -160,4 +167,4 @@ Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
 
 ## Project status
 
-SwasthSetu is designed as a functional hackathon demo with a modular codebase and real local API/data services. WhatsApp delivery can be enabled later by completing the Kapso number setup and configuring its production credentials.
+SwasthSetu is designed as a functional hackathon demo with a modular codebase and deployed Render services. WhatsApp delivery can be enabled later by completing the Kapso number setup and configuring its production credentials.
