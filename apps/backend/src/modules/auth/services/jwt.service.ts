@@ -1,23 +1,47 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService as NestJwtService } from '@nestjs/jwt';
+import jwt, { JwtPayload as JsonWebTokenPayload } from 'jsonwebtoken';
+import { unauthorized } from '../../../common/http-error';
 import { AuthRole, AuthUser } from '../interfaces/auth-user-repository.interface';
 
-export interface JwtPayload { sub: string; role: AuthRole; hospitalId?: string; type: 'access' | 'refresh'; }
+export interface JwtPayload extends JsonWebTokenPayload {
+  sub: string;
+  role: AuthRole;
+  hospitalId?: string;
+  type: 'access' | 'refresh';
+}
+
 export interface AuthTokens { accessToken: string; refreshToken: string; }
 
-@Injectable()
 export class AuthJwtService {
-  constructor(private readonly jwt: NestJwtService, private readonly config: ConfigService) {}
+  constructor(
+    private readonly accessSecret: string,
+    private readonly refreshSecret: string,
+  ) {}
 
   async issue(user: AuthUser): Promise<AuthTokens> {
     const base = { sub: user.id, role: user.role, hospitalId: user.hospitalId };
-    const accessToken = await this.jwt.signAsync({ ...base, type: 'access' }, { expiresIn: '15m', secret: this.config.getOrThrow<string>('JWT_ACCESS_SECRET') });
-    const refreshToken = await this.jwt.signAsync({ ...base, type: 'refresh' }, { expiresIn: '7d', secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET') });
+    const accessToken = jwt.sign({ ...base, type: 'access' }, this.accessSecret, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({ ...base, type: 'refresh' }, this.refreshSecret, { expiresIn: '7d' });
     return { accessToken, refreshToken };
   }
 
-  async verifyRefresh(token: string): Promise<JwtPayload> {
-    return this.jwt.verifyAsync<JwtPayload>(token, { secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET') });
+  verifyAccess(token: string): JwtPayload {
+    return this.verify(token, this.accessSecret, 'access');
+  }
+
+  verifyRefresh(token: string): JwtPayload {
+    return this.verify(token, this.refreshSecret, 'refresh');
+  }
+
+  private verify(token: string, secret: string, expectedType: JwtPayload['type']): JwtPayload {
+    try {
+      const payload = jwt.verify(token, secret);
+      if (typeof payload === 'string' || payload.type !== expectedType || typeof payload.sub !== 'string') {
+        throw unauthorized('Invalid token type.');
+      }
+      return payload as JwtPayload;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'HttpError') throw error;
+      throw unauthorized('Invalid or expired token.');
+    }
   }
 }

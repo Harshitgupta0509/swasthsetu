@@ -1,6 +1,6 @@
 # SwasthSetu architecture
 
-SwasthSetu is organised as a small monorepo. The static web application is in `apps/web`, while the NestJS and Prisma backend remains independently runnable in `apps/backend`.
+SwasthSetu is organised as a small monorepo. The static web application is in `apps/web`, while the Express.js and Prisma backend remains independently runnable in `apps/backend`.
 
 The frontend server in `scripts/serve-frontend.cjs` maps the established browser URLs to their modular source locations. This preserves the existing landing page, login popup workflow, dashboard URLs, API calls, and role guards without a framework migration.
 
@@ -14,4 +14,4 @@ The frontend server in `scripts/serve-frontend.cjs` maps the established browser
 
 ## Backend
 
-`apps/backend` contains NestJS modules, Prisma schema and migrations, and the local Docker configuration. Existing API paths remain unchanged. Domain folders under `src/modules` reserve clear boundaries for future patient, doctor, hospital, queue, bed, blood bank, lab report, and notification features.
+`apps/backend` contains Express routers and services, Prisma schema and migrations, and the local Docker configuration. Existing API paths remain unchanged. Domain folders under `src/modules` reserve clear boundaries for future patient, doctor, hospital, queue, bed, blood bank, lab report, and notification features.

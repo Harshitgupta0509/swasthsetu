@@ -8,7 +8,7 @@ SwasthSetu is a hackathon-ready Government Hospital Management Platform. It brin
 
 **Frontend:** [https://swasthsetu-web.onrender.com](https://swasthsetu-web.onrender.com)
 
-SwasthSetu is hosted on **Render**, with its frontend, NestJS API, PostgreSQL database, and Redis-compatible Key Value service deployed as separate services.
+SwasthSetu is hosted on **Render**, with its frontend, Express.js API, PostgreSQL database, and Redis-compatible Key Value service deployed as separate services.
 
 ## Why SwasthSetu
 
@@ -65,7 +65,7 @@ flowchart LR
     Web --> Doctor[Doctor portal]
     Web --> Hospital[Hospital portal]
 
-    Patient --> API["NestJS API<br/>apps/backend"]
+    Patient --> API["Express.js API<br/>apps/backend"]
     Doctor --> API
     Hospital --> API
 
@@ -93,7 +93,7 @@ swasthsetu/
 │   ├── web/              # Static modular frontend
 │   │   ├── public/       # Landing and login route pages
 │   │   └── src/          # Public, patient, doctor, hospital, shared modules
-│   └── backend/          # NestJS API, Prisma, Docker configuration
+│   └── backend/          # Express.js API, Prisma, Docker configuration
 ├── docs/                 # Architecture, auth, features, migration notes
 ├── scripts/              # Local frontend server
 ├── README.md
@@ -150,7 +150,7 @@ Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
 ## Key technology
 
 - **Frontend:** HTML, CSS, vanilla JavaScript
-- **Backend:** NestJS, TypeScript, REST API
+- **Backend:** Express.js, TypeScript, REST API
 - **Database:** PostgreSQL with Prisma ORM
 - **Caching:** Redis
 - **Authentication:** JWT, role-based access control, OTP-ready patient flow

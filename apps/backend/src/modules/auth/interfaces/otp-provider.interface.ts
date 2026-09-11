@@ -1,5 +1,3 @@
-export const OTP_PROVIDER = Symbol('OTP_PROVIDER');
-
 export interface OtpDelivery {
   accepted: boolean;
   /** Present only in DEVELOPMENT mode. Never expose this in production. */

@@ -12,7 +12,7 @@ apps/
       doctor-portal/
       hospital-portal/
       shared/
-  backend/                          # NestJS, Prisma, Docker and backend configuration
+  backend/                          # Express.js, Prisma, Docker and backend configuration
 docs/
 scripts/
 ```
