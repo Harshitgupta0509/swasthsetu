@@ -31,7 +31,7 @@ In a second terminal from the repository root, run `npm run frontend`, then open
 
 - Frontend: static local HTML files
 - API: `http://127.0.0.1:3000/api/v1`
-- PostgreSQL: port `5432`
+- PostgreSQL: host port `6543` (container port `5432`)
 - Redis: port `6379`
 
 This demo uses a development OTP provider. Kapso/WhatsApp can be connected later without changing the appointment workflow.
